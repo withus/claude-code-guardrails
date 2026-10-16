@@ -1,0 +1,30 @@
+{
+  "_kommentar": "Pruefbericht-Schema. pruefer_typen liest hooks/dry-briefing-gate.sh. Die uebrigen Felder gehoeren zum SubagentStop-Gate des Ursprungs-Setups, das hier nicht enthalten ist (README, Limits).",
+  "pruefer_typen": [
+    "adversarial-verifier",
+    "db-migration-checker",
+    "codex-output-reviewer"
+  ],
+  "urteile": [
+    "PASS",
+    "FLAG",
+    "GAP"
+  ],
+  "regel_id_muster": "^[A-Z]{1,3}-?[0-9]{1,3}$",
+  "gap_ohne_regel": [
+    "keine",
+    "keine trifft",
+    "keine Regel"
+  ],
+  "bericht_min_zeichen": 20,
+  "max_zurueckweisungen": 3,
+  "regeln": {
+    "R1": "urteil-fehlt",
+    "R2": "regel-id-fehlt",
+    "R3": "beleg-fehlt",
+    "R4": "bericht-fehlt"
+  },
+  "abbruch_muster": "abbruch|abbrech|breche ab|abgebrochen|maxturns|turn-limit|limit (ist )?erreicht|kann nicht weiter|gebe auf|nicht fertig geworden",
+  "beleg_muster": "[\\w./-]+\\.[A-Za-z0-9]+:\\d+|\\[B-\\d+\\]",
+  "abbruch_max_zeichen": 400
+}

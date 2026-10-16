@@ -1,0 +1,32 @@
+# Geschuetzte Pfade fuer hooks/protect-live-paths.sh (PreToolUse auf Edit|Write).
+#
+# Diese Datei gilt, solange es keine config/protected-paths.conf gibt und PROTECTED_PATHS_CONF nicht gesetzt ist.
+# Eigene Regeln: Datei nach config/protected-paths.conf kopieren und dort anpassen; die eigene Datei ersetzt
+# diese vollstaendig, es wird nichts zusammengefuehrt.
+#
+# Format: eine Regel je Zeile, "<art> <muster>". Zeilen mit # am Anfang und Leerzeilen zaehlen nicht.
+# Muster sind erweiterte regulaere Ausdruecke (grep -E) und werden gegen den Dateipfad des Aufrufs geprueft.
+# Ohne ^ oder $ genuegt ein Treffer irgendwo im Pfad.
+#
+# Arten, in dieser Reihenfolge geprueft:
+#   credentials  Datei mit Zugangsdaten. Immer gesperrt, auch in erlaubten Pfaden.
+#   allow        Pfad, der vor den folgenden Sperren freigegeben wird.
+#   live         Teil eines Produktivpfads. Gesperrt, Meldung: lokal bearbeiten, testen, hochladen.
+#   stale        Veralteter oder falscher Projektordner. Gesperrt.
+#   hint         Freier Text, der bei einer stale-Sperre als Hinweis erscheint (etwa der richtige Ordner).
+#
+# Eine unbekannte Art, eine Zeile ohne Muster oder ein ungueltiger Ausdruck sperren jedes Edit/Write,
+# bis die Datei korrigiert ist.
+
+# CodeIgniter haelt die Datenbank-Zugangsdaten in dieser Datei.
+credentials application/config/database\.php$
+
+# Beispiel: der lokale Spiegel eines Live-Ordners soll bearbeitbar bleiben.
+# allow ^/srv/arbeit/shop-spiegel/
+
+live /var/www/production/
+live /srv/live/
+
+stale /shop-alt/
+stale /shop-backup-[0-9]+/
+hint Aktueller Projektordner: ~/projekte/shop/

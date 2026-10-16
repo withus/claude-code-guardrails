@@ -1,0 +1,138 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/guardrails/hooks/protect-live-paths.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/guardrails/hooks/auto-backup.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/guardrails/hooks/block-dangerous-commands.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/guardrails/hooks/scan-secrets-before-commit.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/guardrails/hooks/codex-precommit-review.sh",
+            "timeout": 300
+          }
+        ]
+      },
+      {
+        "matcher": "Artifact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/guardrails/hooks/artifact-security-guard.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Agent|SendMessage",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/guardrails/hooks/dry-briefing-gate.sh",
+            "timeout": 10,
+            "statusMessage": "DRY-Gate prüft Briefing"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Edit|Write|MultiEdit|NotebookEdit|Grep|Glob|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $HOME/.claude/guardrails/gates/geheimnis-gate.py sperre",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $HOME/.claude/guardrails/gates/freigabe-gate.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/guardrails/hooks/php-syntax-check.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $HOME/.claude/guardrails/gates/geheimnis-gate.py maske",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/guardrails/hooks/pre-compact-save.sh",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/guardrails/hooks/session-context-loader.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/guardrails/hooks/diagnose-schema-gate.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
